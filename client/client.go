@@ -115,7 +115,12 @@ func newPacket(secret []byte, address string, statAttr radius.Attribute) (*radiu
 
 	ip := net.ParseIP(host)
 	if ip == nil {
-		log.Fatalln("ip is nil")
+		ipList, err := net.LookupIP(host)
+
+		if err != nil {
+			log.Fatalf("Could resolve host \"%s\": %v\n", host, err)
+		}
+		ip = ipList[0]
 	}
 
 	attrIP, err := radius.NewIPAddr(ip)
